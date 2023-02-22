@@ -1,0 +1,19 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform:
+      org..hibernate.dialect.MySQL8Dialect
+    datasource:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc://localhost:3306/mydb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+      username: root
+      password: test
+    properties:
+      hibernate:
+        dialect:
+          storage_engine=innodb
+    show-sql: true
+
+
+
