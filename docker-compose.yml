@@ -2,7 +2,8 @@ version: "3.7"
 
 services:
   mysql:
-    image: mysql:8.0.32
+    image: mysql:5.7.41-debian
+    platform: linux/amd64
     restart: always
     environment:
       MYSQL_USER: user
@@ -11,6 +12,8 @@ services:
       MYSQL_DATABASE: mydb
     ports:
       - "3306:3306"
-
   redis:
-    image:
+    image: redis:alpine
+    restart: always
+    ports:
+      - ":6379"

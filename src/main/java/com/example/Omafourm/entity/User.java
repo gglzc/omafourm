@@ -1,6 +1,7 @@
 package com.example.Omafourm.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,8 +19,8 @@ import java.util.List;
 @Table(name = "users")
 public class User{
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "system-uuid")
+    private Long id;
     private String username ;
     private String password ;
     private String email;
@@ -27,10 +28,16 @@ public class User{
     private Date   update_time;
     // 0：帳號未被激活 , 1:已激活
     private int    status;
+    private String  role;
+    private Date last_login;
+
     @OneToMany(mappedBy = "user")
     private List<Post> posts = new ArrayList<>();
 
-    public User(long id, String username, String password, String email, Date create_time, Date update_time, int status,List<Post> posts) {
+
+    public User(){}
+
+    public User(Long id, String username, String password, String email, Date create_time, Date update_time, int status, String role, Date last_login, List<Post> posts) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -38,15 +45,16 @@ public class User{
         this.create_time = create_time;
         this.update_time = update_time;
         this.status = status;
-        this.posts=posts;
+        this.role = role;
+        this.last_login = last_login;
+        this.posts = posts;
     }
-    public User(){}
 
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -104,5 +112,21 @@ public class User{
 
     public void setPosts(List<Post> posts) {
         this.posts = posts;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public Date getLast_login() {
+        return last_login;
+    }
+
+    public void setLast_login(Date last_login) {
+        this.last_login = last_login;
     }
 }

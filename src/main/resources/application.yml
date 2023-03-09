@@ -1,19 +1,39 @@
 spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/mydb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
+    username: root
+    password: test
   jpa:
-    hibernate:
-      ddl-auto: update
-    database-platform:
-      org..hibernate.dialect.MySQL8Dialect
-    datasource:
-      driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc://localhost:3306/mydb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
-      username: root
-      password: test
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     properties:
       hibernate:
-        dialect:
-          storage_engine=innodb
+        dialect: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
 
+  data:
+    redis:
+      port: 6379
+      database: 0
+      password:
+      timeout: 3000
+      host: localhost
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: @gmail.com
+    password: password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
+
+server:
+  port: 8888
 
 
