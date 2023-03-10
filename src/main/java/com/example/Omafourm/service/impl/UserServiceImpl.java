@@ -10,11 +10,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.Omafourm.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cglib.core.Local;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.MissingResourceException;
@@ -89,8 +91,11 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(email);
         return user != null && email.equals(user.getEmail());
     }
-
-
+    @Override
+    public User getUserByEmail(String email) {
+        User user =userRepository.getUserByEmail(email);
+        return user;
+    }
 
     @Override
     public User SignUp(SignUpRequest signUpRequest) {
@@ -150,8 +155,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public User Login(String email , String password) {
         User user=userRepository.getUserByEmail(email);
+
         try{
            if (user!=null &&  passwordEncoder.matches(password,user.getPassword())){
+               //更新上線時間
+               user.setLast_login(LocalDateTime.now());
+               userRepository.save(user);
                logger.info("User has logged in: " + user.getUsername());
            }else{
                logger.error("Login failed for email or password: " + email);
@@ -162,11 +171,9 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    @Override
-    public User getUserByEmail(String email) {
-        User user =userRepository.getUserByEmail(email);
-        return user;
-    }
+
+
+
 
 
 }

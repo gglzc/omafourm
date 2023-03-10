@@ -21,6 +21,7 @@ public class Post {
     private String title;
     private String content;
     private Date createdDate;
+    private Date updateDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -40,11 +41,13 @@ public class Post {
     public Post(){
         super();
     }
-    public Post(Long id, String title, String content, Date createdDate, User user, Set<Tag> tags, List<Comment> comments) {
+
+    public Post(Long id, String title, String content, Date createdDate, Date updateDate, User user, Set<Tag> tags, List<Comment> comments) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.createdDate = createdDate;
+        this.updateDate = updateDate;
         this.user = user;
         this.tags = tags;
         this.comments = comments;
@@ -104,5 +107,13 @@ public class Post {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     }
 }

@@ -1,19 +1,22 @@
 package com.example.Omafourm.controller;
 
+import com.example.Omafourm.entity.Post;
 import com.example.Omafourm.entity.User;
+import com.example.Omafourm.service.PostService;
 import com.example.Omafourm.service.UserService;
 import com.example.Omafourm.service.request.LoginRequest;
 import com.example.Omafourm.service.request.SignUpRequest;
 import com.example.Omafourm.service.request.VerifyRequest;
+import com.example.Omafourm.service.response.UpdateResponse;
+import com.example.Omafourm.service.response.UserResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @param: UserController
@@ -28,6 +31,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private PostService postService;
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody SignUpRequest signUpRequest) {
@@ -73,12 +78,16 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<String> updateProfile(@PathVariable Long id,@RequestBody User user){
+    public ResponseEntity<UpdateResponse> updateUser(@PathVariable Long id, @RequestBody User user){
 
         User updateUser = userService.updateUser(user, user.getId());
-        return ResponseEntity.ok("success change profile");
+        List<Post> userPosts = postService.getPostByUser(user);
+
+        UpdateResponse userResponse = new UpdateResponse(updateUser.getId(), updateUser.getUsername(), userPosts);
+
+        return ResponseEntity.ok(userResponse);
     }
-    //非公開api 僅能在crm使用
+    //非公開api 僅能在後台使用
     @DeleteMapping("/users/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id){
         userService.deleteUser(id);
@@ -86,13 +95,29 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<String> getUser(@RequestParam(value = "id") Long id){
-            userService.getUserById(id);
-            return ResponseEntity.ok("user");
+    public ResponseEntity<UserResponse> getUser(@RequestParam(value = "id") Long id){
+            User user =userService.getUserById(id);
+            UserResponse userResponse=new UserResponse(
+                    user.getId(),
+                    user.getUsername(),
+                    user.getPosts(),
+                    user.getCreate_time(),
+                    user.getLast_login()
+            );
+            return ResponseEntity.ok(userResponse);
     }
     @GetMapping("/users")
-    public ResponseEntity<String> getAllUser(@RequestBody  User user){
-            List<User> alluser =userService.getAllUser();
-            return ResponseEntity.ok("all users");
+    public ResponseEntity<List<UserResponse>> getAllUsers(){
+            List<User> allUsers =userService.getAllUser();
+            List<UserResponse> allUserResponse =allUsers.stream().
+                    map(user -> new UserResponse(
+                            user.getId(),
+                            user.getUsername(),
+                            user.getPosts(),
+                            user.getCreate_time(),
+                            user.getLast_login()
+                    ) )
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(allUserResponse);
     }
 }

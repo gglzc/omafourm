@@ -1,8 +1,8 @@
 package com.example.Omafourm.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.GenericGenerator;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,7 +29,7 @@ public class User{
     // 0：帳號未被激活 , 1:已激活
     private int    status;
     private String  role;
-    private Date last_login;
+    private LocalDateTime last_login;
 
     @OneToMany(mappedBy = "user")
     private List<Post> posts = new ArrayList<>();
@@ -37,7 +37,8 @@ public class User{
 
     public User(){}
 
-    public User(Long id, String username, String password, String email, Date create_time, Date update_time, int status, String role, Date last_login, List<Post> posts) {
+
+    public User(Long id, String username, String password, String email, Date create_time, Date update_time, int status, String role, LocalDateTime last_login, List<Post> posts) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -122,11 +123,13 @@ public class User{
         this.role = role;
     }
 
-    public Date getLast_login() {
-        return last_login;
+
+
+    public void setLast_login(LocalDateTime last_login) {
+        this.last_login = last_login;
     }
 
-    public void setLast_login(Date last_login) {
-        this.last_login = last_login;
+    public LocalDateTime getLast_login() {
+        return last_login;
     }
 }
