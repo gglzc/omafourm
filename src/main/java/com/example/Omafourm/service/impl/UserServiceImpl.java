@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
                 return null;
             }
             if (UsernameExistOrNot(signUpRequest.getUsername())) {
-                logger.error("User is already Exist!!");
+                logger.error("Username is already Exist!!");
                 return null;
             }
             //先把密碼加密
@@ -170,10 +170,6 @@ public class UserServiceImpl implements UserService {
         }
         return user;
     }
-
-
-
-
 
 
 }
