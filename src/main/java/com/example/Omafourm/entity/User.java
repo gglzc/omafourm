@@ -24,8 +24,8 @@ public class User{
     private String username ;
     private String password ;
     private String email;
-    private Date   create_time;
-    private Date   update_time;
+    private LocalDateTime   create_time;
+    private LocalDateTime   update_time;
     // 0：帳號未被激活 , 1:已激活
     private int    status;
     private String  role;
@@ -38,7 +38,7 @@ public class User{
     public User(){}
 
 
-    public User(Long id, String username, String password, String email, Date create_time, Date update_time, int status, String role, LocalDateTime last_login, List<Post> posts) {
+    public User(Long id, String username, String password, String email, LocalDateTime create_time, LocalDateTime update_time, int status, String role, LocalDateTime last_login, List<Post> posts) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -83,19 +83,19 @@ public class User{
         this.email = email;
     }
 
-    public Date getCreate_time() {
+    public LocalDateTime getCreate_time() {
         return create_time;
     }
 
-    public void setCreate_time(Date create_time) {
+    public void setCreate_time(LocalDateTime create_time) {
         this.create_time = create_time;
     }
 
-    public Date getUpdate_time() {
+    public LocalDateTime getUpdate_time() {
         return update_time;
     }
 
-    public void setUpdate_time(Date update_time) {
+    public void setUpdate_time(LocalDateTime update_time) {
         this.update_time = update_time;
     }
 

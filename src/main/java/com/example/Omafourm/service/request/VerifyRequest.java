@@ -8,8 +8,8 @@ package com.example.Omafourm.service.request;
  * @return:
  */
 public class VerifyRequest {
-    String email;
-    String code;
+    private String email;
+    private String code;
 
     public VerifyRequest(String email, String code) {
         this.email = email;

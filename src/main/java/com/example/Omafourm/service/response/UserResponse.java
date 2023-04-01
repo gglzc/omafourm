@@ -17,10 +17,10 @@ public class UserResponse {
     private Long id;
     private String username;
     private List<Post> posts;
-    private Date create_time;
+    private LocalDateTime create_time;
     private LocalDateTime last_login;
 
-    public UserResponse(Long id, String username, List<Post> posts, Date create_time, LocalDateTime last_login) {
+    public UserResponse(Long id, String username, List<Post> posts, LocalDateTime create_time, LocalDateTime last_login) {
         this.id = id;
         this.username = username;
         this.posts = posts;
@@ -52,11 +52,11 @@ public class UserResponse {
         this.posts = posts;
     }
 
-    public Date getCreate_time() {
+    public LocalDateTime getCreate_time() {
         return create_time;
     }
 
-    public void setCreate_time(Date create_time) {
+    public void setCreate_time(LocalDateTime create_time) {
         this.create_time = create_time;
     }
 

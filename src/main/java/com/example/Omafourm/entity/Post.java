@@ -1,7 +1,9 @@
 package com.example.Omafourm.entity;
 
 import jakarta.persistence.*;
+import org.w3c.dom.Text;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -20,8 +22,8 @@ public class Post {
 
     private String title;
     private String content;
-    private Date createdDate;
-    private Date updateDate;
+    private LocalDateTime createdDate;
+    private LocalDateTime updateDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -42,7 +44,7 @@ public class Post {
         super();
     }
 
-    public Post(Long id, String title, String content, Date createdDate, Date updateDate, User user, Set<Tag> tags, List<Comment> comments) {
+    public Post(Long id, String title, String content, LocalDateTime createdDate, LocalDateTime updateDate, User user, Set<Tag> tags, List<Comment> comments) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -65,7 +67,7 @@ public class Post {
         return content;
     }
 
-    public Date getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
@@ -93,7 +95,7 @@ public class Post {
         this.content = content;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -109,11 +111,11 @@ public class Post {
         this.comments = comments;
     }
 
-    public Date getUpdateDate() {
+    public LocalDateTime getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(Date updateDate) {
+    public void setUpdateDate(LocalDateTime updateDate) {
         this.updateDate = updateDate;
     }
 }

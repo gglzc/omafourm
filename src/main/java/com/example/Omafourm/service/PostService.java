@@ -10,10 +10,10 @@ import java.util.Set;
 
 @Service
 public interface PostService {
+    Post getPost(Long id);
     List<Post> getPostByUser(User user);
-    Post createPost(User user, String title, String content, Set<Tag> tags);
-    void deletePost(Post post);
-    Post updatePost(Post post);
+    Post createPost( String title, String content, Set<Tag> tags);
+    void deletePost(User user ,Post post);
+    Post updatePost(User user, Post post, String title, String content, Set<Tag> tags);
     Post likePost(Post post);
-
 }

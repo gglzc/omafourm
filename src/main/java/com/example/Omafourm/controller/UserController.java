@@ -36,15 +36,16 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody SignUpRequest signUpRequest) {
-        User newUser = userService.SignUp(signUpRequest);
-        if (newUser != null) {
+        boolean userExistOrNot =userService.EmailExistOrNot(signUpRequest.getEmail());
+
+        if (!userExistOrNot) {
+            User newUser = userService.SignUp(signUpRequest);
             userService.VerifySignup(newUser);
             return ResponseEntity.ok("User registered successfully. Please verify your email.");
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User registration failed.");
         }
     }
-
 
     @PostMapping("/verify")
     public ResponseEntity<String> verify(@RequestBody VerifyRequest verifyRequest) {
@@ -120,4 +121,6 @@ public class UserController {
                     .collect(Collectors.toList());
             return ResponseEntity.ok(allUserResponse);
     }
+
+
 }

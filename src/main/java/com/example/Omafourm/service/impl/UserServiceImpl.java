@@ -5,13 +5,15 @@ import com.example.Omafourm.service.MailService;
 import com.example.Omafourm.service.UserService;
 import com.example.Omafourm.service.VerificationService;
 import com.example.Omafourm.service.request.SignUpRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.Omafourm.repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cglib.core.Local;
-import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +40,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private MailService mailService;
 
-
     @Qualifier("verificationServiceImpl")
     @Autowired
     private VerificationService verifyService;
@@ -51,6 +52,7 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public User addUser(User user) {
+        logger.info("User : %s is new User" , user.getUsername());
         return userRepository.save(user);
     }
 
@@ -102,10 +104,7 @@ public class UserServiceImpl implements UserService {
         //Username 及email 是否存在
         User user = new User();
         try {
-            if (EmailExistOrNot(signUpRequest.getEmail())) {
-                logger.error("Email is already Exist!!");
-                return null;
-            }
+
             if (UsernameExistOrNot(signUpRequest.getUsername())) {
                 logger.error("Username is already Exist!!");
                 return null;
@@ -113,15 +112,14 @@ public class UserServiceImpl implements UserService {
             //先把密碼加密
             String encodePassword = passwordEncoder.encode(signUpRequest.getPassword());
 
-
             user.setUsername(signUpRequest.getUsername());
             user.setPassword(encodePassword);
             user.setEmail(signUpRequest.getEmail());
             user.setStatus(0);
             user.setRole("user");
-            Date now = new Date();
-            user.setCreate_time(now);
-            user.setUpdate_time(now);
+
+            user.setCreate_time(LocalDateTime.now());
+            user.setUpdate_time(LocalDateTime.now());
 
             addUser(user);
 
@@ -133,7 +131,6 @@ public class UserServiceImpl implements UserService {
         return user;
     }
     public void VerifySignup(User user){
-
         //寄驗證信箱
         String verify=verifyService.generateVerificationCode(user.getEmail());
         mailService.sendMail(
