@@ -26,6 +26,9 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
+    @ManyToOne
+
+    private User user;
     public Comment(){}
     public Comment(Long id, String content, LocalDateTime createdDate, Post post) {
         this.id = id;
