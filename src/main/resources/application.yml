@@ -20,7 +20,8 @@ spring:
       database: 0
       password:
       timeout: 3000
-      host: localhost
+      host: 127.0.0.1
+
 
   mail:
     host: smtp.gmail.com
@@ -34,6 +35,6 @@ spring:
           starttls.enable: true
 
 server:
-  port: 8880
+  port: 8888
 
 

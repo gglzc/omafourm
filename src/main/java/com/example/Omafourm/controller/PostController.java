@@ -29,16 +29,22 @@ public class PostController {
     UserService userService;
     @GetMapping("/post/{id}")
     public ResponseEntity<PostResponse> getPost (@PathVariable Long id){
-        Post post =postService.getPost(id);
-        PostResponse postResponse= new PostResponse();
+        try {
+            Post post = postService.getPost(id);
+            PostResponse postResponse = new PostResponse();
 
-        postResponse.setId(post.getId());
-        postResponse.setTitle(post.getTitle());
-        postResponse.setContent(post.getContent());
-        postResponse.setCreateDate(post.getCreatedDate());
-        postResponse.setUpdateTime(post.getUpdateDate());
+            postResponse.setId(post.getId());
+            postResponse.setTitle(post.getTitle());
+            postResponse.setContent(post.getContent());
+            postResponse.setTag(post.getTags());
+            postResponse.setCreateDate(post.getCreatedDate());
+            postResponse.setUpdateTime(post.getUpdateDate());
 
-        return ResponseEntity.ok(postResponse);
+            return ResponseEntity.ok(postResponse);
+        }catch (Exception e){
+            e.printStackTrace();
+            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
     @PostMapping("/post")
     public ResponseEntity<PostResponse> userAddPost(@RequestBody PostRequest postRequest , HttpSession session){
@@ -46,7 +52,14 @@ public class PostController {
         if (session.getAttribute("id")==null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+        Long userId = (Long) session.getAttribute("id"); // 從 session 中取得用戶 ID
+        User user = userService.getUserById(userId); // 根據用戶 ID 從資料庫中取得用戶對象
+        if (user == null) { // 如果用戶不存在，返回 401 錯誤
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         Post newPost = postService.createPost(
+                user,
                 postRequest.getTitle(),
                 postRequest.getContent(),
                 postRequest.getTag()
@@ -59,27 +72,37 @@ public class PostController {
                 newPost.getCreatedDate(),
                 newPost.getUpdateDate()
         );
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
 
     @DeleteMapping("/post/{id}")
-    public ResponseEntity<String> userDeletePost( User user , Post post , HttpSession session){
-        if (session.getAttribute("id")==null){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You have to login first");
+    public ResponseEntity<String> userDeletePost(@PathVariable Long id, HttpSession session){
+        // 驗證用戶是否已登入
+        Long userId = (Long) session.getAttribute("id");
+        if (userId == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("您必須先登入");
         }
-        postService.deletePost(user,post);
-        return ResponseEntity.ok("Delete success");
+        try {
+            postService.deletePost(id ,userId);
+            return ResponseEntity.ok("Delete success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("刪除失敗，請稍後再試");
+        }
     }
 
-    @PutMapping("/post/{id}")
+    @PatchMapping ("/post/{id}")
     public ResponseEntity<PostResponse>userUpdatePost (@PathVariable Long id ,@RequestBody  PostRequest postRequest ,HttpSession session){
-        if (session.getAttribute("id")==null){
+        Long userId = (Long) session.getAttribute("id");
+        if (userId == null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        User user = userService.getUserById(postRequest.getUser_id());
-        Post post = postService.getPost(id);
 
-        Post updatePost =postService.updatePost(user ,
+        Post post = postService.getPost(id);
+        User user =post.getUser();
+
+        Post updatePost =postService.updatePost(
+                user ,
                 post ,
                 postRequest.getTitle(),
                 postRequest.getContent(),

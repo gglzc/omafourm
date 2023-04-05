@@ -2,6 +2,7 @@ package com.example.Omafourm.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,13 +21,13 @@ public class Comment {
     private Long id;
 
     private String content;
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
     public Comment(){}
-    public Comment(Long id, String content, Date createdDate, Post post) {
+    public Comment(Long id, String content, LocalDateTime createdDate, Post post) {
         this.id = id;
         this.content = content;
         this.createdDate = createdDate;
@@ -49,11 +50,11 @@ public class Comment {
         this.content = content;
     }
 
-    public Date getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
 

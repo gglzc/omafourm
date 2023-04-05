@@ -15,7 +15,7 @@ public class PostRequest {
     private String title;
     private String content;
     private Set<Tag> tag;
-    private Long user_id;
+
 
     public PostRequest(String title, String content, Set<Tag> tag) {
         this.title = title;
@@ -23,12 +23,7 @@ public class PostRequest {
         this.tag = tag;
     }
 
-    public PostRequest(String title, String content, Set<Tag> tag, Long user_id) {
-        this.title = title;
-        this.content = content;
-        this.tag = tag;
-        this.user_id = user_id;
-    }
+
 
     public String getTitle() {
         return title;
@@ -54,11 +49,4 @@ public class PostRequest {
         this.tag = tag;
     }
 
-    public Long getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
-    }
 }

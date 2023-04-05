@@ -65,7 +65,7 @@ public class UserController {
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest, HttpSession session) {
         User user = userService.Login(loginRequest.getEmail(),loginRequest.getPassword());
         if (user != null && user.getStatus() == 1) {
-            session.setAttribute("user", user);
+            session.setAttribute("id", user.getId());
             return ResponseEntity.ok("Login successful.");
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid email or password.");
@@ -79,7 +79,7 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<UpdateResponse> updateUser(@PathVariable Long id, @RequestBody User user){
+    public ResponseEntity<UpdateResponse> updateUser(@PathVariable(value = "id") Long id, @RequestBody User user){
 
         User updateUser = userService.updateUser(user, user.getId());
         List<Post> userPosts = postService.getPostByUser(user);
@@ -96,7 +96,7 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<UserResponse> getUser(@RequestParam(value = "id") Long id){
+    public ResponseEntity<UserResponse> getUser(@PathVariable(value = "id") Long id){
             User user =userService.getUserById(id);
             UserResponse userResponse=new UserResponse(
                     user.getId(),
@@ -110,7 +110,8 @@ public class UserController {
     @GetMapping("/users")
     public ResponseEntity<List<UserResponse>> getAllUsers(){
             List<User> allUsers =userService.getAllUser();
-            List<UserResponse> allUserResponse =allUsers.stream().
+            List<UserResponse> allUserResponse =allUsers.
+                    stream().
                     map(user -> new UserResponse(
                             user.getId(),
                             user.getUsername(),
