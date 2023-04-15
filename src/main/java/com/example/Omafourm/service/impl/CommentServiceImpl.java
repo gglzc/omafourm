@@ -3,8 +3,10 @@ package com.example.Omafourm.service.impl;
 import com.example.Omafourm.entity.Comment;
 import com.example.Omafourm.entity.Post;
 import com.example.Omafourm.repository.CommentRepository;
+import com.example.Omafourm.repository.PostRepository;
 import com.example.Omafourm.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 
@@ -16,19 +18,20 @@ import java.util.stream.Collectors;
  */
 public class CommentServiceImpl implements CommentService {
     @Autowired
-    CommentRepository commentRepository;
+    private CommentRepository commentRepository;
+    @Autowired
+    private PostRepository postRepository;
+    @Transactional
     @Override
-    Comment AddComment(Post post, Comment comment ){
-        //先檢查發文的使用者是不是同個
-        if (!post.getUser().equals(comment.getPost().getUser().getId()){
-
-        }
-
-
+    public Comment AddComment(Long postId, Comment comment) {
+        Post post = postRepository.findPostsById(postId);
+        comment.setPost(post);
+        return commentRepository.save(comment);
     }
-
+    @Transactional
     @Override
-    void DeleteComment(Long commentId, Long userId){
-
+    public void DeleteComment(Long commentId) {
+        Comment comment =commentRepository.findCommentById(commentId);
+        commentRepository.delete(comment);
     }
 }

@@ -15,5 +15,8 @@ public interface PostService {
     Post createPost(User user , String title, String content, Set<Tag> tags);
     void deletePost(Long postId ,Long userId);
     Post updatePost(User user, Post post, String title, String content, Set<Tag> tags);
+    List<Post> getAllPost();
     Post likePost(Post post);
+    List<Post> getAllPostTimeDesc();
+    List<Post> getAllPostTimeAsc();
 }

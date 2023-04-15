@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class MailServiceImpl implements MailService {
     private static final Logger logger= LoggerFactory.getLogger(MailServiceImpl.class);
     @Autowired
-    JavaMailSender mailSender;
+    private JavaMailSender mailSender;
     @Value("${spring.mail.username}")
     private static String from;
     @Override

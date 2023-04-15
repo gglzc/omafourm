@@ -13,6 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @param: PostController
  * @package: com.example.Omafourm.controller
@@ -109,6 +112,52 @@ public class PostController {
                 postRequest.getTag()
         );
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
+    @GetMapping("/posts")
+    public ResponseEntity<List<PostResponse>>getAllPosts(){
+        List<Post> AllPosts = postService.getAllPost();
+        List<PostResponse> allPostResponse = AllPosts.stream().
+                map(post -> new PostResponse(
+                    post.getId(),
+                        post.getTitle(),
+                        post.getContent(),
+                        post.getTags(),
+                        post.getCreatedDate(),
+                        post.getUpdateDate()
+                ))
+        .collect(Collectors.toList());
+        return ResponseEntity.ok(allPostResponse);
+    }
+    @GetMapping("/posts/desc")
+    public ResponseEntity<List<PostResponse>> getPostsByDesc(){
+        List<Post> posts = postService.getAllPostTimeDesc();
+        List <PostResponse> postsbydesc =posts.stream().
+                map(post -> new PostResponse(
+                        post.getId(),
+                        post.getTitle(),
+                        post.getContent(),
+                        post.getTags(),
+                        post.getCreatedDate(),
+                        post.getUpdateDate()
+                )).
+                collect(Collectors.toList());
+        return ResponseEntity.ok(postsbydesc);
+    }
+
+    @GetMapping("/posts/asc")
+    public ResponseEntity<List<PostResponse>> getPostsByAsc(){
+        List<Post> posts = postService.getAllPostTimeAsc();
+        List <PostResponse> postsbydesc =posts.stream().
+                map(post -> new PostResponse(
+                        post.getId(),
+                        post.getTitle(),
+                        post.getContent(),
+                        post.getTags(),
+                        post.getCreatedDate(),
+                        post.getUpdateDate()
+                )).
+                collect(Collectors.toList());
+        return ResponseEntity.ok(postsbydesc);
     }
 
 }

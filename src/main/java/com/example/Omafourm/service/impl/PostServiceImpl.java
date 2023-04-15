@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @param: PostServiceImpl
@@ -26,11 +27,10 @@ import java.util.Set;
 @Service
 public class PostServiceImpl implements PostService {
     private  static  final Logger logger= LoggerFactory.getLogger(PostServiceImpl.class);
-    private
     @Autowired
-    PostRepository postRepository;
+    private PostRepository postRepository;
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Override
     public List<Post> getPostByUser(User user) {
@@ -96,10 +96,29 @@ public class PostServiceImpl implements PostService {
             return null;
         }
     }
+
+    @Override
+    public List<Post> getAllPost() {
+        return postRepository.findAll();
+    }
+
+
     //先不做like post 系統
     @Override
     public Post likePost(Post post) {
         return null;
+    }
+
+    @Override
+    //文章時間由新到舊
+    public List<Post> getAllPostTimeDesc() {
+        return postRepository.findAllByOrderByCreatedDateDesc();
+    }
+
+    @Override
+    //文章時間由舊到新
+    public List<Post> getAllPostTimeAsc() {
+        return postRepository.findAllByOrderByCreatedDateAsc();
     }
 }
 

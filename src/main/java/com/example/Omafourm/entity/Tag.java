@@ -2,7 +2,9 @@ package com.example.Omafourm.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -22,10 +24,10 @@ public class Tag {
     private String name;
 
     @ManyToMany(mappedBy = "tags")
-    private Set<Post> posts = new HashSet<>();
+    private List<Post> posts = new ArrayList<>();
 
     public Tag(){}
-    public Tag(Long id, String name, Set<Post> posts) {
+    public Tag(Long id, String name, List<Post> posts) {
         this.id = id;
         this.name = name;
         this.posts = posts;
@@ -47,11 +49,11 @@ public class Tag {
         this.name = name;
     }
 
-    public Set<Post> getPosts() {
+    public List<Post> getPosts() {
         return posts;
     }
 
-    public void setPosts(Set<Post> posts) {
+    public void setPosts(List<Post> posts) {
         this.posts = posts;
     }
 }
